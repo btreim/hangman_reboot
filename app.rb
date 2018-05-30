@@ -12,7 +12,8 @@ f.each_line {|word| dictionary << word.chomp.downcase if word.chomp.length.betwe
 
 
 get '/' do
-  erb :index, layout: :main
+  drawing = $hangman[-1]
+  erb :index, layout: :main, :locals => {:drawing => drawing}
 end
 
 get '/win' do
