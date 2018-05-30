@@ -21,20 +21,23 @@ end
 
 get '/lose' do
   solution = @@h.solution.join("")
-  erb :lose, layout: :main, :locals => {:solution => solution}
+  drawing = $hangman[@@h.incorrect]
+  erb :lose, layout: :main, :locals => {:solution => solution, :drawing => drawing}
 end
 
 get '/new' do
   @@h = Hangman.new(dictionary)
   @@h.generate_new_game
-  erb :guess, layout: :main
+  drawing = $hangman[@@h.incorrect]
+  erb :guess, layout: :main, :locals => {:drawing => drawing}
 end
 
 post '/guess' do
   guess = params["guess"]
   @@h.game_loop(guess)
   win_lose(@@h)
-  erb :guess, layout: :main
+  drawing = $hangman[@@h.incorrect]
+  erb :guess, layout: :main, :locals => {:drawing => drawing}
 end
 
 
@@ -43,8 +46,6 @@ def win_lose(h)
   redirect '/lose' if h.win == false
 end
 
-
- 
 class Hangman
   attr_accessor :id, :solution, :correct_guess, :all_guess, :win, :incorrect
 
@@ -138,16 +139,14 @@ class Hangman
       self.win = true
     elsif incorrect == 6
       self.win = false
-      draw_hangman(incorrect)
+      # draw_hangman(incorrect)
     end
-
-    draw_hangman(incorrect)
-    puts "Solution: #{correct_guess.join}"
+    # draw_hangman(incorrect)
   end
 
-  def draw_hangman(num_incorrect)
-    puts $hangman[num_incorrect]
-  end
+  # def draw_hangman(num_incorrect)
+  #   $hangman[num_incorrect]
+  # end
 
   def game_loop(guess)
     check_if_correct(guess)
