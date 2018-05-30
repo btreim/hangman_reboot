@@ -14,15 +14,15 @@ get '/' do
 end
 
 get '/new' do
+  @@h = Hangman.new(dictionary)
+  @@h.generate_new_game
   erb :guess, layout: :main
 end
 
 
 post '/guess' do
   guess = params["guess"]
-  @h = Hangman.new(dictionary)
-  @h.generate_new_game
-  @h.game_loop(guess)
+  @@h.game_loop(guess)
   erb :guess, layout: :main
 end
 
@@ -176,9 +176,9 @@ class Hangman
 
   def game_loop(guess)
     # until self.win
-      check_if_correct(guess)
-      all_guess << guess
-      check_win_lose(guess)
+    check_if_correct(guess)
+    all_guess << guess
+    check_win_lose(guess)
     # end
     # 	choice
   end
