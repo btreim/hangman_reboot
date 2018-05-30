@@ -18,7 +18,8 @@ get '/win' do
 end
 
 get '/lose' do
-	erb :lose, layout: :main
+	solution = @@h.solution.join("")
+	erb :lose, layout: :main, :locals => {:solution => solution}
 end
 
 get '/new' do
@@ -64,28 +65,6 @@ class Hangman
     input
   end
 
-  # def choice
-  # 	print "
-
-  # 	  /\\  /\\__ _ _ __ ___   __ _ _ __ ___   __ _ _ __
-  # 	 / /_/ / _` | '  _ \\ / _` | '_ ` _ \\ / _` | '_ \\
-  # 	/ __  / (_| | | | | | (_| | | | | | | (_| | | | |
-  # 	\\/ /_/ \\__,_| |_| |_|\\__, |_| |_| |_|\\__,_|_| |_|
-  # 	                      |___/
-
-  # 	"
-  # 	puts "\n(1) New Game \n(2) Load Game \n(3) Exit Game"
-  # 	choice = gets.chomp
-  # 	if choice == "2"
-  # 		load_file(display_saved_games)
-  # 	elsif choice == "3"
-  # 		puts"\n GOODBYE!"
-  # 		exit
-  # 	else
-  # 		generate_new_game
-  # 	end
-  # end
-
   def generate_new_game
     self.win = nil
     self.id = nil
@@ -93,7 +72,6 @@ class Hangman
     self.correct_guess = Array.new(self.solution.length, "-")
     self.all_guess = Array.new
     self.incorrect = 0
-    # game_loop
   end
 
   def save_file
@@ -144,14 +122,14 @@ class Hangman
     @dictionary[index]
   end
 
-  def prompt_user
-    if all_guess.length > 0
-      puts "Previously Guessed Letters: #{all_guess.sort.join(",")}"
-      clean_input
-    else
-      clean_input
-    end
-  end
+  # def prompt_user
+  #   if all_guess.length > 0
+  #     puts "Previously Guessed Letters: #{all_guess.sort.join(",")}"
+  #     clean_input
+  #   else
+  #     clean_input
+  #   end
+  # end
 
   def check_if_correct(guess)
     solution.each_with_index do |letter, index|
@@ -168,17 +146,9 @@ class Hangman
   def check_win_lose(*guess)
     if correct_guess == solution
       self.win = true
-      # redirect '/win'
-      # 10.times{puts "YOU WIN!"}
     elsif incorrect == 6
       self.win = false
-      puts "YOU LOSE!
-
-			'#{solution.join("")}' was the correct answer
-
-			"
       draw_hangman(incorrect)
-      # choice
     end
 
     draw_hangman(incorrect)
@@ -190,11 +160,8 @@ class Hangman
   end
 
   def game_loop(guess)
-    # until self.win
     check_if_correct(guess)
     all_guess << guess
     check_win_lose(guess)
-    # end
-    # 	choice
   end
 end
