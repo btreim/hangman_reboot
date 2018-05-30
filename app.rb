@@ -1,9 +1,11 @@
+
 require "sinatra"
 # require 'yaml'
-require_relative './lib/hangman_array.rb'
 if development?
   require "sinatra/reloader"
 end
+require_relative './lib/hangman_array.rb'
+
 dictionary = []
 f = File.read("5desk.txt")
 f.each_line {|word| dictionary << word.chomp.downcase if word.chomp.length.between?(5,9)}
@@ -18,8 +20,8 @@ get '/win' do
 end
 
 get '/lose' do
-	solution = @@h.solution.join("")
-	erb :lose, layout: :main, :locals => {:solution => solution}
+  solution = @@h.solution.join("")
+  erb :lose, layout: :main, :locals => {:solution => solution}
 end
 
 get '/new' do
@@ -28,12 +30,7 @@ get '/new' do
   erb :guess, layout: :main
 end
 
-
 post '/guess' do
-  def win_lose(h)
-    redirect '/win' if h.win
-    redirect '/lose' if h.win == false
-  end
   guess = params["guess"]
   @@h.game_loop(guess)
   win_lose(@@h)
@@ -41,7 +38,10 @@ post '/guess' do
 end
 
 
-
+def win_lose(h)
+  redirect '/win' if h.win
+  redirect '/lose' if h.win == false
+end
 
 
 
@@ -50,7 +50,6 @@ class Hangman
 
   def initialize(dictionary)
     @dictionary = dictionary
-    # choice
   end
 
   def clean_input
@@ -122,15 +121,6 @@ class Hangman
     @dictionary[index]
   end
 
-  # def prompt_user
-  #   if all_guess.length > 0
-  #     puts "Previously Guessed Letters: #{all_guess.sort.join(",")}"
-  #     clean_input
-  #   else
-  #     clean_input
-  #   end
-  # end
-
   def check_if_correct(guess)
     solution.each_with_index do |letter, index|
       if letter == guess
@@ -138,7 +128,7 @@ class Hangman
       end
     end
     if solution.include?(guess) == false
-      puts "That was incorrect!	"
+      puts "That was incorrect! "
       self.incorrect += 1
     end
   end
