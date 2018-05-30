@@ -44,7 +44,7 @@ def win_lose(h)
 end
 
 
-
+ 
 class Hangman
   attr_accessor :id, :solution, :correct_guess, :all_guess, :win, :incorrect
 
