@@ -13,6 +13,14 @@ get '/' do
   erb :index, layout: :main
 end
 
+get '/win' do
+  erb :win, layout: :main
+end
+
+get '/lose' do
+	erb :lose, layout: :main
+end
+
 get '/new' do
   @@h = Hangman.new(dictionary)
   @@h.generate_new_game
@@ -21,8 +29,13 @@ end
 
 
 post '/guess' do
+  def win_lose(h)
+    redirect '/win' if h.win
+    redirect '/lose' if h.win == false
+  end
   guess = params["guess"]
   @@h.game_loop(guess)
+  win_lose(@@h)
   erb :guess, layout: :main
 end
 
@@ -74,7 +87,7 @@ class Hangman
   # end
 
   def generate_new_game
-    self.win = false
+    self.win = nil
     self.id = nil
     self.solution = random_word.split("")
     self.correct_guess = Array.new(self.solution.length, "-")
@@ -155,8 +168,10 @@ class Hangman
   def check_win_lose(*guess)
     if correct_guess == solution
       self.win = true
-      10.times{puts "YOU WIN!"}
+      # redirect '/win'
+      # 10.times{puts "YOU WIN!"}
     elsif incorrect == 6
+      self.win = false
       puts "YOU LOSE!
 
 			'#{solution.join("")}' was the correct answer
