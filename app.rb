@@ -29,7 +29,8 @@ get '/new' do
   @@h = Hangman.new(dictionary)
   @@h.generate_new_game
   drawing = $hangman[@@h.incorrect]
-  erb :guess, layout: :main, :locals => {:drawing => drawing}
+  all_guess = @@h.all_guess.join(",")
+  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing}
 end
 
 post '/guess' do
@@ -37,7 +38,8 @@ post '/guess' do
   @@h.game_loop(guess)
   win_lose(@@h)
   drawing = $hangman[@@h.incorrect]
-  erb :guess, layout: :main, :locals => {:drawing => drawing}
+  all_guess = @@h.all_guess.join(",")
+  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing}
 end
 
 
