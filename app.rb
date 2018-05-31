@@ -4,10 +4,10 @@ require "sinatra"
 if development?
   require "sinatra/reloader"
 end
-require_relative './lib/hangman_array.rb'
+require_relative 'lib/hangman_array.rb'
 
 dictionary = []
-f = File.read("./hangman_reboot/5desk.txt")
+f = File.read("5desk.txt")
 f.each_line {|word| dictionary << word.chomp.downcase if word.chomp.length.between?(5,9)}
 
 get '/' do
