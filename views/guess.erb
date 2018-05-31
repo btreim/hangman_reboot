@@ -1,9 +1,11 @@
-<h4> Already Guessed: </h4>
-<p> <%= all_guess %> </p>
+
+<p> <%= correct_guess %> </p>
 
 <form action="/guess", method="POST">
-	<input type="text" name="guess" required/>
+	<input type="text" name="guess" maxlength="1" required/>
+	<div></div>
 	<input type="submit" name="submit">
+	<div></div>
 </form>
-
+<h4> Already Guessed: <%= all_guess %> </h4>
 <a href="/">Main Menu</a>	

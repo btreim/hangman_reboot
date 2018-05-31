@@ -9,7 +9,7 @@ require_relative './lib/hangman_array.rb'
 dictionary = []
 f = File.read("5desk.txt")
 f.each_line {|word| dictionary << word.chomp.downcase if word.chomp.length.between?(5,9)}
-
+drawing = $hangman[@@h.incorrect]
 
 get '/' do
   drawing = $hangman[-1]
@@ -17,7 +17,8 @@ get '/' do
 end
 
 get '/win' do
-  erb :win, layout: :main
+  drawing = $hangman[@@h.incorrect]
+  erb :win, layout: :main, :locals => {:drawing => drawing}
 end
 
 get '/lose' do
@@ -29,18 +30,20 @@ end
 get '/new' do
   @@h = Hangman.new(dictionary)
   @@h.generate_new_game
+  correct_guess = @@h.correct_guess.join(" ")
   drawing = $hangman[@@h.incorrect]
   all_guess = @@h.all_guess.join(",")
-  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing}
+  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing, :correct_guess => correct_guess}
 end
 
 post '/guess' do
   guess = params["guess"]
   @@h.game_loop(guess)
   win_lose(@@h)
+  correct_guess = @@h.correct_guess.join(" ")
   drawing = $hangman[@@h.incorrect]
   all_guess = @@h.all_guess.join(",")
-  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing}
+  erb :guess, layout: :main, :locals => {:all_guess => all_guess, :drawing => drawing, :correct_guess => correct_guess}
 end
 
 
@@ -132,7 +135,6 @@ class Hangman
       end
     end
     if solution.include?(guess) == false
-      puts "That was incorrect! "
       self.incorrect += 1
     end
   end
@@ -142,14 +144,9 @@ class Hangman
       self.win = true
     elsif incorrect == 6
       self.win = false
-      # draw_hangman(incorrect)
     end
-    # draw_hangman(incorrect)
   end
 
-  # def draw_hangman(num_incorrect)
-  #   $hangman[num_incorrect]
-  # end
 
   def game_loop(guess)
     check_if_correct(guess)

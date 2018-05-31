@@ -1,6 +1,16 @@
-body {
+
+
+
+body, html {
    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
    font-weight: 300;
+   height: 100%;
+   display: grid;
+}
+
+span {
+	margin: auto;
+	text-align: center;
 }
 
 div {
@@ -8,8 +18,17 @@ div {
 	width: 50%;
 }
 
-input {
-	width: 50% ;
+a {
+    text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+input[type="text"] {
+	margin: auto;
+	width: 9% ;
 	height: 50px;
 	font-size: 200%;
 }
