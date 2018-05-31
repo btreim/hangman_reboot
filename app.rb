@@ -7,9 +7,8 @@ end
 require_relative './lib/hangman_array.rb'
 
 dictionary = []
-f = File.read("5desk.txt")
+f = File.read("./hangman_reboot/5desk.txt")
 f.each_line {|word| dictionary << word.chomp.downcase if word.chomp.length.between?(5,9)}
-drawing = $hangman[@@h.incorrect]
 
 get '/' do
   drawing = $hangman[-1]
